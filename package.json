@@ -7,9 +7,7 @@
         "build": "esbuild app.ts --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge16 --outfile=out.js",
         "serve": "serve",
         "gfx:render": "cd scripts && ./yarn-gfx-render.sh",
-        "gfx:develop": "cd scripts && ./yarn-gfx-develop.sh",
-        "gfx:gif": "cd scripts && ./yarn-gfx-gif.sh",
-        "gfx:sprites": "cd scripts && ./generate-sprites.js"
+        "gfx:sprites": "cd scripts && ./yarn-gfx-sprites.js"
     },
     "dependencies": {
         "pixi.js": "^6.0.2"
