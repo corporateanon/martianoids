@@ -136,3 +136,4 @@ renders
 .stfolder
 spritesheets
 *.blend1
+out.*

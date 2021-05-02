@@ -1,40 +1,68 @@
-import { Application, Container, Sprite, Texture } from 'pixi.js';
+import { Application, Resource, Sprite, Texture } from 'pixi.js';
 
 const app = new Application({
     width: 800,
     height: 600,
-    backgroundColor: 0x1099bb,
-    resolution: window.devicePixelRatio || 1,
+    backgroundColor: 0x000000,
+    resolution: 1,
 });
 document.body.appendChild(app.view);
 
-const container = new Container();
+class DudeSprite extends Sprite {
+    private rotationTextures: {
+        [k: string]: Texture<Resource> | undefined;
+    } = {};
 
-app.stage.addChild(container);
+    init(app: Application) {
+        this.rotationTextures = Object.fromEntries(
+            [0, 120, 150, 180, 210, 240, 270, 30, 300, 330, 60, 90].map(
+                (angle) => {
+                    const frameID = `Dude.rotate_${angle}`;
+                    return [
+                        angle,
+                        app.loader.resources['spritesheets/characters.json']
+                            ?.textures?.[frameID],
+                    ];
+                }
+            )
+        );
+        return this;
+    }
 
-// Create a new texture
-const texture = Texture.from('assets/bunny.png');
-
-// Create a 5x5 grid of bunnies
-for (let i = 0; i < 25; i++) {
-    const bunny = new Sprite(texture);
-    bunny.anchor.set(0.5);
-    bunny.x = (i % 5) * 40;
-    bunny.y = Math.floor(i / 5) * 40;
-    container.addChild(bunny);
+    setRotation(angle: number) {
+        const textureForAngle = this.rotationTextures[angle];
+        if (textureForAngle) {
+            this.texture = textureForAngle;
+        }
+    }
 }
 
-// Move container to the center
-container.x = app.screen.width / 2;
-container.y = app.screen.height / 2;
+class GameState {
+    dudeRotation = 0;
+    dude = new DudeSprite();
+    prevDate = new Date();
 
-// Center bunny sprite in local container coordinates
-container.pivot.x = container.width / 2;
-container.pivot.y = container.height / 2;
+    public readonly init = (app: Application) => {
+        this.dude.init(app);
+        app.stage.addChild(this.dude);
 
-// Listen for animate update
-app.ticker.add((delta) => {
-    // rotate the container!
-    // use delta to create frame-independent transform
-    container.rotation -= 0.01 * delta;
-});
+        app.ticker.add(this.update);
+    };
+
+    public readonly update = (delta: number) => {
+        const now = new Date();
+        if (now.getTime() - this.prevDate.getTime() >= 100) {
+            this.prevDate = now;
+            this.dudeRotation += 30;
+            this.dudeRotation %= 360;
+            this.dude.setRotation(this.dudeRotation);
+        }
+    };
+}
+
+const setup = () => {
+    const gameState = new GameState();
+    gameState.init(app);
+};
+
+app.loader.add('spritesheets/characters.json').load(setup);

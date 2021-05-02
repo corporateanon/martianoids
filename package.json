@@ -11,7 +11,8 @@
         "gfx:build": "npm run gfx:render; npm run gfx:sprites"
     },
     "dependencies": {
-        "pixi.js": "^6.0.2"
+        "pixi.js": "^6.0.2",
+        "typescript": "^4.2.4"
     },
     "devDependencies": {
         "esbuild": "^0.11.16",
