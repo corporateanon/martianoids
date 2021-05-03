@@ -1,4 +1,5 @@
-import { Application, Resource, Sprite, Texture } from 'pixi.js';
+import { Application, Container, Graphics } from 'pixi.js';
+import { createProjection, Projection3Dto2D } from './lib/isometric';
 
 const app = new Application({
     width: 800,
@@ -8,61 +9,87 @@ const app = new Application({
 });
 document.body.appendChild(app.view);
 
-class DudeSprite extends Sprite {
-    private rotationTextures: {
-        [k: string]: Texture<Resource> | undefined;
-    } = {};
+const root = new Container();
+app.stage.addChild(root);
+const projection = createProjection(app.view.width, app.view.height);
 
-    init(app: Application) {
-        this.rotationTextures = Object.fromEntries(
-            [0, 120, 150, 180, 210, 240, 270, 30, 300, 330, 60, 90].map(
-                (angle) => {
-                    const frameID = `Dude.rotate_${angle}`;
-                    return [
-                        angle,
-                        app.loader.resources['spritesheets/characters.json']
-                            ?.textures?.[frameID],
-                    ];
-                }
-            )
-        );
-        return this;
-    }
+const cellSize = 100;
+for (let z = 0; z <= 0; z += cellSize / 4.7) {
+    const grid = createGrid({
+        projection,
+        cellSize,
+        minX: -400,
+        maxX: 400,
+        minY: -400,
+        maxY: 400,
+        z,
+    });
 
-    setRotation(angle: number) {
-        const textureForAngle = this.rotationTextures[angle];
-        if (textureForAngle) {
-            this.texture = textureForAngle;
-        }
-    }
+    root.addChild(grid);
 }
 
-class GameState {
-    dudeRotation = 0;
-    dude = new DudeSprite();
-    prevDate = new Date();
+root.addChild(createAxes({ projection, length: 100 }));
 
-    public readonly init = (app: Application) => {
-        this.dude.init(app);
-        app.stage.addChild(this.dude);
+function createGrid({
+    projection,
+    cellSize,
+    minX,
+    maxX,
+    minY,
+    maxY,
+    z,
+}: {
+    projection: Projection3Dto2D;
+    cellSize: number;
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+    z: number;
+}) {
+    const grid = new Graphics();
+    grid.lineStyle({ width: 1, color: 0xaaaaaa });
 
-        app.ticker.add(this.update);
-    };
+    for (let x = minX; x <= maxX; x += cellSize) {
+        const start = projection(x, minY, z);
+        const end = projection(x, maxY, z);
+        grid.moveTo(...start);
+        grid.lineTo(...end);
+    }
+    for (let y = minY; y <= maxY; y += cellSize) {
+        const start = projection(minX, y, z);
+        const end = projection(maxX, y, z);
+        grid.moveTo(...start);
+        grid.lineTo(...end);
+    }
 
-    public readonly update = (delta: number) => {
-        const now = new Date();
-        if (now.getTime() - this.prevDate.getTime() >= 100) {
-            this.prevDate = now;
-            this.dudeRotation += 30;
-            this.dudeRotation %= 360;
-            this.dude.setRotation(this.dudeRotation);
-        }
-    };
+    return grid;
 }
 
-const setup = () => {
-    const gameState = new GameState();
-    gameState.init(app);
-};
+function createAxes({
+    length,
+    projection,
+}: {
+    length: number;
+    projection: Projection3Dto2D;
+}) {
+    const axes = new Graphics();
+    const start = projection(0, 0, 0);
+    const xAxisEnd = projection(length, 0, 0);
+    const yAxisEnd = projection(0, length, 0);
+    const zAxisEnd = projection(0, 0, length);
 
-app.loader.add('spritesheets/characters.json').load(setup);
+    axes.moveTo(...start);
+    axes.lineStyle({ width: 4, color: 0xff0000 });
+    axes.lineTo(...xAxisEnd);
+
+    axes.moveTo(...start);
+    axes.lineStyle({ width: 4, color: 0x00ff00 });
+    axes.lineTo(...yAxisEnd);
+
+    axes.moveTo(...start);
+    axes.lineStyle({ width: 4, color: 0x0000ff });
+    axes.lineTo(...zAxisEnd);
+
+    return axes;
+}

@@ -4,13 +4,14 @@
     "license": "MIT",
     "main": "index.js",
     "scripts": {
-        "build": "esbuild app.ts --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge16 --outfile=out.js",
+        "build": "esbuild app.ts --bundle --minify --sourcemap --target=chrome80 --outfile=dist/out.js",
         "serve": "serve",
         "gfx:render": "cd scripts && ./yarn-gfx-render.sh",
         "gfx:sprites": "cd scripts && ./yarn-gfx-sprites.js",
         "gfx:build": "npm run gfx:render; npm run gfx:sprites"
     },
     "dependencies": {
+        "isomath": "^1.0.0",
         "pixi.js": "^6.0.2",
         "typescript": "^4.2.4"
     },

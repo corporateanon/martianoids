@@ -991,6 +991,11 @@ ismobilejs@^1.1.0:
   resolved "https://registry.yarnpkg.com/ismobilejs/-/ismobilejs-1.1.1.tgz#c56ca0ae8e52b24ca0f22ba5ef3215a2ddbbaa0e"
   integrity sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw==
 
+isomath@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/isomath/-/isomath-1.0.0.tgz#33ae9d19288335d8252394f15ddb19ceced04998"
+  integrity sha512-8WyTk6scFMNRYABw5rStmvvpCfCHjzGFF3TJmJBQqvyIBufxueaX6j1vkEm7wdS2aaTg0QjMfuEL6mQFkAsFEw==
+
 isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
