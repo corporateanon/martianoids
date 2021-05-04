@@ -1,11 +1,6 @@
 //@ts-ignore
 import isomath from 'isomath';
-
-export type Projection3Dto2D = (
-    x: number,
-    y: number,
-    z: number
-) => [number, number];
+import { Projection3Dto2D } from './primitives';
 
 export const createProjection = (w: number, h: number): Projection3Dto2D => {
     const project = isomath({
