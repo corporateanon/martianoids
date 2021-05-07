@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "esbuild app.ts --bundle --minify --sourcemap --target=chrome80 --outfile=dist/out.js",
+        "watch": "esbuild app.ts --watch --bundle --minify --sourcemap --target=chrome80 --outfile=dist/out.js",
         "serve": "serve",
         "gfx:render": "cd scripts && ./yarn-gfx-render.sh",
         "gfx:sprites": "cd scripts && ./yarn-gfx-sprites.js",

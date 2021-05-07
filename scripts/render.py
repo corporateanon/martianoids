@@ -2,45 +2,28 @@ import bpy
 import os
 import math
 
-
-def disableRender(collection):
-    collection.exclude = True
-    print("Disabled rendering of: {}".format(collection.name))
-
-def enableRender(collection):
-    collection.exclude = False
-    print("Enabled rendering of: {}".format(collection.name))
-
 def disableRenderForAllCharacters():
-    for col in bpy.context.view_layer.layer_collection.children['Characters'].children:
-        if col.name.startswith("Character."):
-            disableRender(col)
+    bpy.context.view_layer.layer_collection.children['Characters'].exclude = True
 
-def degToRad(deg):
-    return deg * math.pi/180
+class InstanceHandle():
+    def __init__(self, collectionName):
+        src = bpy.data.collections[collectionName]
+        inst = bpy.data.objects.new(name='__tmp__instance.{}'.format(collectionName), object_data=None)
+        inst.instance_collection = src
+        inst.instance_type = 'COLLECTION'
+        bpy.data.scenes['Scene'].collection.objects.link(inst)
+        self.inst = inst
 
-def selectCharacter(name):
-    disableRenderForAllCharacters()
-    characterCollection = bpy.context.view_layer.layer_collection.children['Characters'].children[name]
-    enableRender(characterCollection)
+    def __enter__(self):
+        return self.inst
 
-def turnCamera(angleDegrees):
-    cameraRadius = 1
-    lightRadius = 10
-    angleBetweenCameraAndLight = degToRad(45)
-    angle = degToRad(angleDegrees)
-
-    bpy.data.objects["MainCamera"].location = (
-        math.cos(angle) * cameraRadius,
-        math.sin(angle) * cameraRadius,
-        cameraRadius
-    )
-
-    bpy.data.objects["MainLight"].location = (
-        math.cos(angle+angleBetweenCameraAndLight) * lightRadius,
-        math.sin(angle+angleBetweenCameraAndLight) * lightRadius,
-        lightRadius
-    )
+    def __exit__(self, type, value, traceback):
+        print('Cleaning up {}'.format(self.inst.name))
+        bpy.data.objects.remove(self.inst, do_unlink=True)
+    
+    def getInstance(self):
+        return self.inst
+       
 
 def renderScene(file):
     bpy.context.scene.render.filepath = file
@@ -49,24 +32,27 @@ def renderScene(file):
 
 def renderDude():
     characterName = 'Character.Dude'
-    selectCharacter(characterName)
-    for angle in range(0, 359, 30):
-        turnCamera(angle)
-        renderScene(
-            file="//renders/{name}/rotate_{angle:d}".format(name=characterName, angle=angle)
-        )
+    with InstanceHandle(characterName) as model:
+        model.rotation_mode = 'AXIS_ANGLE'
+        for angle in range(0, 359, 30):
+            model.rotation_axis_angle = (math.radians(angle), 0, 0, 1)
+            renderScene(
+                file="//renders/{name}/rotate_{angle:d}".format(name=characterName, angle=angle)
+            )
 
 def renderOrbitoid():
     characterName = 'Character.Orbitoid'
-    selectCharacter(characterName)
-    for angle in range(0, 179, 30):
-        turnCamera(angle)
-        renderScene(
-            file="//renders/{name}/rotate_{angle:d}".format(name=characterName, angle=angle)
-        )
+    with InstanceHandle(characterName) as model:
+        model.rotation_mode = 'AXIS_ANGLE'
+        for angle in range(0, 179, 30):
+            model.rotation_axis_angle = (math.radians(angle), 0, 0, 1)
+            renderScene(
+                file="//renders/{name}/rotate_{angle:d}".format(name=characterName, angle=angle)
+            )
 
 
 def main():
+    disableRenderForAllCharacters()
     renderDude()
     renderOrbitoid()
 
