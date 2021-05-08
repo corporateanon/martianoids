@@ -84,8 +84,8 @@ def main():
     disableRenderForAllCharacters()
     configureCamera()
     renderWalls()
-    # renderDude()
-    # renderOrbitoid()
-    # renderCalibrator()
+    renderDude()
+    renderOrbitoid()
+    renderCalibrator()
 
 main()
