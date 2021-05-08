@@ -7,7 +7,7 @@ def disableRenderForAllCharacters():
 
 def configureCamera():
     cam = bpy.data.objects['MainCamera']
-    cam.location = (-1, -1, 1.15)
+    cam.location = (-1, -1, 1.12)
     cam.data.ortho_scale = 0.875
 
 class InstanceHandle():
@@ -84,8 +84,8 @@ def main():
     disableRenderForAllCharacters()
     configureCamera()
     renderWalls()
-    renderDude()
-    renderOrbitoid()
-    renderCalibrator()
+    # renderDude()
+    # renderOrbitoid()
+    # renderCalibrator()
 
 main()
