@@ -28,6 +28,10 @@ const processCoordinates = (coords, image) => {
                     w: value.width,
                     h: value.height,
                 },
+                anchor: {
+                    x: 0.5,
+                    y: 0.8,
+                },
             };
 
             return [`${characterName}.${state}`, pixiSpritesheetEntry];

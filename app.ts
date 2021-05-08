@@ -28,15 +28,32 @@ const app = new Application({
 });
 document.body.appendChild(app.view);
 
-const root = new Container();
-app.stage.addChild(root);
+app.loader.add('spritesheets/characters.json').load(() => {
+    const root = new Container();
+    app.stage.addChild(root);
 
-const projection = createProjection(app.view.width, app.view.height);
-addGridAndAxes(projection, root);
+    const projection = createProjection(app.view.width, app.view.height);
+    addGridAndAxes(projection, root);
 
-const dude = new DudeModel();
-const dudeView = new DudeView();
-dudeView.setProjection(projection);
-dudeView.setParent(root);
-dudeView.add();
-dudeView.update(dude);
+    const dude = new DudeModel();
+    const dudeView = new DudeView();
+    dudeView.setProjection(projection);
+    dudeView.setParent(root);
+    dudeView.setApp(app);
+    dudeView.add();
+
+    const r = 300;
+    let angle = 0;
+    setInterval(() => {
+        const rAngle = (Math.PI / 180) * angle;
+        const x = Math.cos(rAngle) * r;
+        const y = Math.sin(rAngle) * r;
+        dude.setPosition(x, y, 0);
+        dude.setRotation(angle + 90);
+        angle += 0.5;
+    }, 20);
+
+    app.ticker.add(() => {
+        dudeView.update(dude);
+    });
+});

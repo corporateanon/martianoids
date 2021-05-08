@@ -1,7 +1,9 @@
+import { Application } from '@pixi/app';
 import { Container, DisplayObject } from '@pixi/display';
 import { Projection3Dto2D } from './primitives';
 
 export interface IAbstractView<TDisplayObject extends DisplayObject> {
+    setApp(app: Application): void;
     setParent(container: Container): void;
     setProjection(projection: Projection3Dto2D): void;
     add(): void;
@@ -17,11 +19,15 @@ export interface IUpdatableView<TModel, TDisplayObject extends DisplayObject>
 export abstract class BaseView<TDisplayObject extends DisplayObject>
     implements IAbstractView<TDisplayObject> {
     protected parent?: Container;
+    protected app?: Application;
     protected displayObject?: TDisplayObject;
     protected projection: Projection3Dto2D = (x, y, z) => [x, y];
 
     setParent(container: Container): void {
         this.parent = container;
+    }
+    setApp(app: Application): void {
+        this.app = app;
     }
     setProjection(projection: Projection3Dto2D): void {
         this.projection = projection;

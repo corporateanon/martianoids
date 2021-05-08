@@ -50,10 +50,18 @@ def renderOrbitoid():
                 file="//renders/{name}/rotate_{angle:d}".format(name=characterName, angle=angle)
             )
 
+def renderCalibrator():
+    characterName = 'Character.Calibrator'
+    with InstanceHandle(characterName) as model:
+        renderScene(
+            file="//renders/{name}/main".format(name=characterName)
+        )
+
 
 def main():
     disableRenderForAllCharacters()
     renderDude()
     renderOrbitoid()
+    renderCalibrator()
 
 main()

@@ -7,6 +7,7 @@
         "build": "esbuild app.ts --bundle --minify --sourcemap --target=chrome80 --outfile=dist/out.js",
         "watch": "esbuild app.ts --watch --bundle --minify --sourcemap --target=chrome80 --outfile=dist/out.js",
         "serve": "serve",
+        "dev": "concurrently npm:serve npm:watch",
         "gfx:render": "cd scripts && ./yarn-gfx-render.sh",
         "gfx:sprites": "cd scripts && ./yarn-gfx-sprites.js",
         "gfx:build": "npm run gfx:render; npm run gfx:sprites"
@@ -17,6 +18,7 @@
         "typescript": "^4.2.4"
     },
     "devDependencies": {
+        "concurrently": "^6.1.0",
         "esbuild": "^0.11.16",
         "globby": "^11.0.3",
         "serve": "^11.3.2",
