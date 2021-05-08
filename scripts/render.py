@@ -58,8 +58,26 @@ def renderCalibrator():
         )
 
 
+def renderWalls():
+    with InstanceHandle('Character.WallCross'):
+        renderScene(
+            file='//renders/Character.Wall/cross'
+        )
+
+    with InstanceHandle('Character.WallBar') as model:
+        model.rotation_mode = 'AXIS_ANGLE'
+        renderScene(
+            file='//renders/Character.Wall/rotate_0'
+        )
+        model.rotation_axis_angle = (math.radians(90), 0, 0, 1)
+        renderScene(
+            file='//renders/Character.Wall/rotate_90'
+        )
+
+
 def main():
     disableRenderForAllCharacters()
+    renderWalls()
     renderDude()
     renderOrbitoid()
     renderCalibrator()
