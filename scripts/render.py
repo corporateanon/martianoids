@@ -5,6 +5,11 @@ import math
 def disableRenderForAllCharacters():
     bpy.context.view_layer.layer_collection.children['Characters'].exclude = True
 
+def configureCamera():
+    cam = bpy.data.objects['MainCamera']
+    cam.location = (-1, -1, 1.15)
+    cam.data.ortho_scale = 0.875
+
 class InstanceHandle():
     def __init__(self, collectionName):
         src = bpy.data.collections[collectionName]
@@ -77,6 +82,7 @@ def renderWalls():
 
 def main():
     disableRenderForAllCharacters()
+    configureCamera()
     renderWalls()
     renderDude()
     renderOrbitoid()
