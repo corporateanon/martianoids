@@ -1,7 +1,4 @@
 import { Texture } from '@pixi/core';
-import { Graphics } from '@pixi/graphics';
-import { Loader } from '@pixi/loaders';
-import { IPointData } from '@pixi/math';
 import { Sprite } from '@pixi/sprite';
 import { BaseView, IUpdatableView } from '../BaseView';
 import { DudeModel } from '../models/DudeModel';
@@ -30,16 +27,7 @@ export class DudeView
 
     constructor() {
         super();
-
         this.displayObject = new Sprite();
-
-        // this.displayObject = new Graphics();
-
-        // this.displayObject.lineStyle({
-        //     width: 4,
-        //     color: 0xcccc00,
-        // });
-        // this.displayObject.drawEllipse(0, 0, 45, 20);
     }
 
     private getTextureForRotation(angle: number) {
@@ -80,13 +68,13 @@ export class DudeView
     }
 
     update(model: DudeModel): void {
-        const pos = model.getPosition();
+        const pos = model.location.getPosition();
         const pos2D = this.projection(...pos);
         if (this.displayObject) {
             this.displayObject.x = Math.round(pos2D[0]);
             this.displayObject.y = Math.round(pos2D[1]);
             const texture: Texture = this.getTextureForRotation(
-                model.getRotation()
+                model.location.getRotation()
             );
             this.displayObject.texture = texture;
             this.displayObject.anchor.x = texture.defaultAnchor.x;

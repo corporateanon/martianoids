@@ -1,5 +1,5 @@
 import { Graphics } from 'pixi.js';
-import { Projection3Dto2D } from './isometric';
+import { Projection3Dto2D } from './primitives';
 
 export function createGrid({
     projection,

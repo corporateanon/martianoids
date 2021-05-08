@@ -1,7 +1,7 @@
 import { BaseModel } from '../BaseModel';
 import { Location } from '../Location';
-import { Coords3D } from '../primitives';
 
-export class DudeModel extends BaseModel {
+export class WallModel extends BaseModel {
     public location: Location = new Location();
+    public variant: 'xAxis' | 'yAxis' | 'cross' = 'cross';
 }
